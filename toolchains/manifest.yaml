@@ -1,0 +1,25 @@
+# Single source of truth for toolchain versions. Changing a version means changing this file.
+# Values marked "unpinned" are filled in at M1 (cuda) and M2 (neuron) from the current
+# vLLM and AWS Neuron compatibility tables. Hardware CI runs with --strict and rejects them.
+model:
+  id: Qwen/Qwen2.5-7B-Instruct
+  max_model_len: 4096
+  dtype: bfloat16
+
+platforms:
+  cuda:
+    instance_type: g6.xlarge
+    base_image: unpinned
+    driver_min: unpinned
+    torch: unpinned
+    vllm: unpinned
+    serve_args:
+      gpu_memory_utilization: 0.90
+  neuron:
+    instance_type: inf2.xlarge
+    base_image: unpinned
+    neuron_sdk: unpinned
+    vllm: unpinned
+    serve_args:
+      tensor_parallel_size: 2   # inf2.xlarge has 1 Inferentia2 chip = 2 NeuronCores
+      max_num_seqs: 8
